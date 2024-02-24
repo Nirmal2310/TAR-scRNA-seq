@@ -37,7 +37,12 @@ conda install -c bioconda samtools
 ### 6. [GtfToGenePred](https://bioconda.github.io/recipes/ucsc-gtftogenepred/README.html)
 This tool is used to convert gtf annotation files to refFlat format.
 ```
-conda install -c bioconda ucsc-gtftogenepred
+conda install -c bioconda ucsc-gtftogenepred 
+```
+If the above method doesn't work, you can follow these steps
+```bash
+wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/gtfToGenePred
+chmod 777 gtfToGenePred
 ```
 ### 7. [Bedtools](https://bedtools.readthedocs.io/en/latest/content/installation.html)
 Please make sure this tool is available in your working environment.
