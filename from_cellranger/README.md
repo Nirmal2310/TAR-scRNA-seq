@@ -59,11 +59,11 @@ git clone https://github.com/fw262/TAR-scRNA-seq
 
 ### 2. Download required software listed above.
 
-Please ensure to include all required software before starting. If using conda, you can create a new environment with the included ```scTAR_cellranger.yml``` file. Be sure to change the path in the last line of the .yml file so that it points to your miniconda3 installation. Install everything using the following command:
+Please ensure to include all required software before starting. If using conda, you can create a new environment with the included ```tarseq.txt``` file. Install everything using the following command:
 ```
-conda create -f scTAR_cellranger.yml
+conda create -n tarseq --file tarseq.txt
 ```
-By default, the new environment will be named "scTAR_cellranger", but you can rename it by changing the .yml file prior to environment initialization if you'd like (see the last line of the file).
+By default, the new environment will be named "tarseq", but you can rename it by changing the -n parameter of conda create.
 
 ### 3. Align .fastq files with cellranger count.
 
@@ -83,6 +83,7 @@ Please change the variable names in the config.yaml as required for your analysi
 - **CORES**: Number of cores used in each step of the pipeline. To run multiple samples in parallel, please specify total number of cores in the snakemake command (i.e. "snakemake -j {total cores}").
 - **MERGEBP**: Number of bases to merge in groHMM. Smaller numbers creates more TARs but takes longer to run. We recommend keeping the default value of 500.
 - **THRESH**: Used to set TARs coverage threshold. This is sequence depth dependent. Default coverage threshold set at 1 in 10,000,000 uniquely aligned reads. For example, if there are 500,000,000 total aligned reads, TARs with at least 50 reads are kept when **THRESH** is set to 10,000,000. A higher **THRESH** value increases the number of TARs kept after filtering. We recommend keeping the default value of 10000000.
+- **MEM**: Maximum memory to be utilized by the pipeline in GB.
 
 ### 5. Run snakemake with the command ```snakemake -j [# total cores]```.
 
