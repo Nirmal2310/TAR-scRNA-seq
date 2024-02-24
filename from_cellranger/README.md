@@ -47,6 +47,9 @@ conda install -c bioconda bedtools
 ### 8. [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
 
 **Please also download the nt database.**
+``bash
+for i in {00..60}; do wget -c  https://ftp.ncbi.nlm.nih.gov/blast/db/nt.$i.tar.gz; done
+```
 
 ## Procedure
 
