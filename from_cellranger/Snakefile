@@ -34,6 +34,7 @@ CR_REF = config['CR_REF']
 MERGEBP=str(config['MERGEBP'])
 THRESH=str(config['THRESH'])
 CORES = config['CORES']
+MEM = config['MEM']
 
 #FULLSCRIPTPATH=str(config['FULLSCRIPTPATH'])
 ########################################################################################################
@@ -107,7 +108,7 @@ rule calcHMMbed:
 	threads: CORES
 	shell:
 		"""
-		bash scripts/SingleCellHMM_MW.bash {input} {CORES} {MERGEBP} {THRESH} {wildcards.DATADIR}/{wildcards.sample}/TAR
+		bash scripts/SingleCellHMM_MW.bash {input} {CORES} {MEM} {MERGEBP} {THRESH} {wildcards.DATADIR}/{wildcards.sample}/TAR
 		"""
 # Generate annotations from HMM in refFlat format
 #		Returns annotations with and without considering strandedness/direction
@@ -116,8 +117,8 @@ rule calcHMMrefFlat:
 		BEDGZ='{DATADIR}/{sample}/TAR/TAR_reads.bed.gz',
 		REFFLAT=CR_REF+"/genes/genes.refFlat"
 	output:
-		# NODIR = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.noDir.genes.refFlat',
-		WITHDIR ='{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.withDir.genes.refFlat'
+		# NODIR = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.noDir.refFlat',
+		WITHDIR ='{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.withDir.refFlat'
 	shell:
 		"""
 		Rscript scripts/generate_refFlat_script_both.R {input.REFFLAT} {input.BEDGZ}
@@ -126,9 +127,9 @@ rule calcHMMrefFlat:
 # Convert stranded annotations to gtf format
 rule HMM_refFlat_to_gtf_WITHDIR:
 	input:
-		WITHDIR ='{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.withDir.genes.refFlat'
+		WITHDIR ='{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.withDir.refFlat'
 	output:
-		WITHDIR ='{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.withDir.genes.refFlat.gtf'
+		WITHDIR ='{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.withDir.refFlat.gtf'
 	shell:
 		"""
 		Rscript scripts/convertRefFlatToGTF.R {input.WITHDIR}
@@ -137,7 +138,7 @@ rule HMM_refFlat_to_gtf_WITHDIR:
 # Label .bam file with each HMM feature
 rule stage3_withDir:
 	input:
-		TAR_GTF = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.withDir.genes.refFlat.gtf'
+		TAR_GTF = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.withDir.refFlat.gtf'
 	output:
 		OUTBAM=temp('{DATADIR}/{sample}/TAR/TAR_tagged_withDir.bam'),
 		bamIndex=temp('{DATADIR}/{sample}/TAR/TAR_tagged_withDir.bai')
@@ -161,9 +162,9 @@ rule stage3_withDir:
 # Convert non-stranded annotations to gtf format
 # rule HMM_refFlat_to_gtf_NODIR:
 # 	input:
-# 		NODIR = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.noDir.genes.refFlat'
+# 		NODIR = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.noDir.refFlat'
 # 	output:
-# 		NODIR = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.noDir.genes.refFlat.gtf'
+# 		NODIR = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.noDir.refFlat.gtf'
 # 	shell:
 # 		"""
 # 		Rscript scripts/convertRefFlatToGTF.R {input.NODIR}
@@ -173,7 +174,7 @@ rule stage3_withDir:
 # rule stage3_noDir:
 # 	input:
 # 		MERGED = '{DATADIR}/{sample}/outs/possorted_genome_bam.bam',
-# 		TAR_REFFLAT = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.noDir.genes.refFlat'
+# 		TAR_REFFLAT = '{DATADIR}/{sample}/TAR/TAR_reads.bed.gz.noDir.refFlat'
 # 	output: temp()'{DATADIR}/{sample}/TAR/TAR_tagged_noDir.bam')
 # 	threads: 1
 # 	shell:
